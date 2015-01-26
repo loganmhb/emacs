@@ -1,0 +1,71 @@
+(require 'package)
+(add-to-list 'package-archives '("marmalade" . "https://marmalade-repo.org/packages/"))
+
+(ido-mode t)
+(tool-bar-mode -1)
+(scroll-bar-mode -1)
+
+;; themes
+
+(add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
+(load-theme 'zenburn t)
+
+;; Keep popup dialogues from crashing Emacs, maybe
+
+(defadvice yes-or-no-p (around prevent-dialog activate)
+  "Prevent yes-or-no-p from activating a dialog"
+  (let ((use-dialog-box nil))
+    ad-do-it))
+
+(defadvice y-or-n-p (around prevent-dialog-yorn activate)
+  "Prevent y-or-n-p from activating a dialog"
+  (let ((use-dialog-box nil))
+    ad-do-it))
+
+;; CC-mode customizations
+
+(setq c-default-style "linux"
+      c-basic-offset 4)
+;; js2-mode customizations (can't use customize because the above popup blocking code is not working)
+
+(custom-set-variables  
+ '(js2-basic-offset 2)  
+ '(js2-bounce-indent-p t)) 
+
+(add-hook 'markdown-mode-hook (lambda () (longlines-mode t)))
+
+;; web-mode settings
+
+(defun my-web-mode-hook ()
+  "Hooks for Web mode."
+  (setq web-mode-markup-indent-offset 2)
+  (setq web-mode-css-indent-offset 4)
+  (setq web-mode-code-markup-offset 2))
+
+(add-hook 'web-mode-hook 'my-web-mode-hook)
+
+;; Start Paredit for lisp modes
+
+(defun lmb-start-paredit ()
+  (paredit-mode))
+
+(add-hook 'clojure-mode-hook 'lmb-start-paredit)
+(add-hook 'scheme-mode-hook 'lmb-start-paredit)
+(add-hook 'elisp-mode-hook 'lmb-start-paredit)
+(add-hook 'lisp-mode-hook 'lmb-start-paredit)
+
+;; auto-mode-alist customizations
+
+(add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
+(add-to-list 'auto-mode-alist '("\\.jsx\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
+(add-to-list 'auto-mode-alist '("\\.html\\'" . web-mode))
+;; Open this file with M-x open-dot-emacs
+
+(defun open-dot-emacs ()
+  (interactive)
+  (find-file "~/.emacs.d/personal/user.el"))
+
+;; Open the eshell at startup
+
+(eshell)
