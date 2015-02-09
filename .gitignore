@@ -3,3 +3,6 @@ elpa/*
 backups/*
 eshell/*
 ido.last
+auto-save-list/*
+bookmarks
+projectile-bookmarks.eld
