@@ -29,6 +29,7 @@
                       markdown-mode projectile exec-path-from-shell
                       auto-complete flycheck-clojure flycheck-pos-tip))
 
+(package-refresh-contents)
 
 (dolist (p my-packages)
   (when (not (package-installed-p p))
