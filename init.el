@@ -5,7 +5,7 @@
 ;;; Code:
 
 (require 'package)
-;;(add-to-list 'package-archives '("marmalade" . "https://marmalade-repo.org/packages/"))
+(add-to-list 'package-archives '("marmalade" . "https://marmalade-repo.org/packages/"))
 (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
 (package-initialize)
 
@@ -13,6 +13,9 @@
 (setq inhibit-splash-screen t)
 (setq initial-frame-alist '((top . 0) (left . 0) (width . 172) (height . 60)))
 
+;; window changing keybinding:
+
+(global-set-key (kbd "C-o") 'other-window)
 
 ;; minimal UI
 
@@ -23,11 +26,14 @@
 
 ;; packages
 
+(package-refresh-contents)
+
 (defvar my-packages '(better-defaults paredit idle-highlight-mode ido-ubiquitous
                       magit writeroom-mode clj-refactor cider
                       clojure-mode floobits web-mode js2-mode
                       markdown-mode projectile exec-path-from-shell
-                      auto-complete flycheck-clojure flycheck-pos-tip))
+                      auto-complete evil flycheck-clojure flycheck-pos-tip
+                      hideshow))
 
 
 (dolist (p my-packages)
@@ -93,6 +99,26 @@
 (setq nrepl-log-messages t)
 (setq nrepl-hide-special-buffers t)
 
+(defun eval-and-insert-sexpr ()
+  (interactive)
+  (setq current-prefix-arg '(2))
+  (insert "\n")
+  (call-interactively 'cider-eval-last-sexp)
+  (move-to-left-margin)
+  (insert ";=> "))
+
+(add-hook 'clojure-mode-hook (lambda ()
+                               (global-set-key (kbd "C-c i")
+                                               'eval-and-insert-sexpr)))
+
+(mapc (lambda (s) (put-clojure-indent s 1))
+      '(describe describe-server it before-all after-all before after
+                 init-state render render-state will-mount did-mount should-update
+                 will-receive-props will-update did-update display-name will-unmount
+                 describe-with-db describe-with-server GET* PUT* DELETE* POST*
+                 PATCH*))
+
+
 ;; Highlight long lines
 
 
@@ -157,16 +183,6 @@
                                (highlight-long-lines)))
 
 
-(eval-after-load 'flycheck '(flycheck-clojure-setup))
-
-
-(add-hook 'after-init-hook #'global-flycheck-mode)
-
-
-(eval-after-load 'flycheck
-  '(setq flycheck-display-errors-function #'flycheck-pos-tip-error-messages))
-
-
 ;; CC-mode customizations
 
 (setq c-default-style "linux"
@@ -178,6 +194,7 @@
  '(js2-bounce-indent-p t)) 
 
 (add-hook 'markdown-mode-hook (lambda () (longlines-mode t)))
+
 
 ;; web-mode settings
 
@@ -211,6 +228,22 @@
 (defun open-dot-emacs ()
   (interactive)
   (find-file "~/.emacs.d/init.el"))
+
+
+;; Org mode extensions
+
+(defun lmb-insert-org-src-block (lang)
+  (interactive "sEnter source language: ")
+  (insert "#+BEGIN_SRC " lang "\n\n#+END_SRC")
+  (move-beginning-of-line 1)
+  (forward-line -1))
+
+;; Writing settings
+
+
+(add-hook 'org-mode-hook (lambda () (writeroom-mode)))
+(add-hook 'writeroom-mode-hook (lambda () (auto-fill-mode)))
+
 
 ;; Keybindings
 
