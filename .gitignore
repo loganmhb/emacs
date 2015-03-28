@@ -1,8 +1,9 @@
-elpa/*
-#*#
-backups/*
-eshell/*
+elpa/**
+\#*\# # emacs autosave files
+backups/**
+eshell/**
+places
 ido.last
-auto-save-list/*
+auto-save-list/**
 bookmarks
 projectile-bookmarks.eld
