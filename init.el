@@ -33,7 +33,7 @@
                       clojure-mode floobits web-mode js2-mode
                       markdown-mode projectile exec-path-from-shell
                       auto-complete evil flycheck-clojure flycheck-pos-tip
-                      hideshow))
+                      hideshow haskell-mode))
 
 
 (dolist (p my-packages)
@@ -115,8 +115,11 @@
       '(describe describe-server it before-all after-all before after
                  init-state render render-state will-mount did-mount should-update
                  will-receive-props will-update did-update display-name will-unmount
-                 describe-with-db describe-with-server GET* PUT* DELETE* POST*
-                 PATCH*))
+                 describe-with-db describe-with-server swaggered))
+
+(mapc (lambda (s) (put-clojure-indent s 'defun))
+      '(GET* PUT* DELETE* POST* PATCH* context))
+
 
 
 ;; Highlight long lines
@@ -181,6 +184,11 @@
                                (clj-refactor-mode 1)
                                (cljr-add-keybindings-with-prefix "C-c C-r")
                                (highlight-long-lines)))
+
+
+;; haskell
+
+(add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)
 
 
 ;; CC-mode customizations
