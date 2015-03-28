@@ -5,7 +5,10 @@
 ;;; Code:
 
 (require 'package)
-(add-to-list 'package-archives '("marmalade" . "https://marmalade-repo.org/packages/"))
+
+(add-to-list 'package-archives
+             '("marmalade" . "https://marmalade-repo.org/packages/"))
+
 (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
 (package-initialize)
 
@@ -26,7 +29,9 @@
 
 ;; packages
 
+
 (package-refresh-contents)
+
 
 (defvar my-packages '(better-defaults paredit idle-highlight-mode ido-ubiquitous
                       magit writeroom-mode clj-refactor cider
@@ -34,6 +39,9 @@
                       markdown-mode projectile exec-path-from-shell
                       auto-complete evil flycheck-clojure flycheck-pos-tip
                       hideshow haskell-mode))
+
+
+(package-refresh-contents)
 
 
 (dolist (p my-packages)
