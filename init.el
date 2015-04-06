@@ -30,9 +30,6 @@
 ;; packages
 
 
-(package-refresh-contents)
-
-
 (defvar my-packages '(better-defaults paredit idle-highlight-mode ido-ubiquitous
                       magit writeroom-mode clj-refactor cider
                       clojure-mode floobits web-mode js2-mode
