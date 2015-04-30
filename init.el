@@ -27,6 +27,10 @@
     (scroll-bar-mode -1)
     (global-set-key (kbd "s-=") 'text-scale-increase))
 
+;; stop making noise when I scroll
+
+(setq ring-bell-function #'ignore)
+
 ;; packages
 
 
@@ -35,7 +39,7 @@
                       clojure-mode floobits web-mode js2-mode
                       markdown-mode projectile exec-path-from-shell
                       auto-complete evil flycheck-clojure flycheck-pos-tip
-                      hideshow haskell-mode))
+                      hideshow haskell-mode plantuml ob-clojure))
 
 
 (package-refresh-contents)
@@ -206,7 +210,9 @@
  '(js2-basic-offset 2)  
  '(js2-bounce-indent-p t)) 
 
-(add-hook 'markdown-mode-hook (lambda () (longlines-mode t)))
+(add-hook 'markdown-mode-hook (lambda ()
+                                (writeroom-mode)
+                                (auto-fill-mode)))
 
 
 ;; web-mode settings
@@ -244,6 +250,20 @@
 
 
 ;; Org mode extensions
+
+(setq org-babel-clojure-backend 'cider)
+
+(require 'ob-clojure)
+
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((sh . t)
+   (clojure . t)
+   (plantuml . t)))
+
+(setq org-src-fontify-natively t)
+
+(setq org-list-allow-alphabetical t)
 
 (defun lmb-insert-org-src-block (lang)
   (interactive "sEnter source language: ")
