@@ -39,7 +39,7 @@
                       clojure-mode floobits web-mode js2-mode
                       markdown-mode projectile exec-path-from-shell
                       auto-complete evil flycheck-clojure flycheck-pos-tip
-                      hideshow haskell-mode plantuml))
+                      hideshow haskell-mode))
 
 
 (package-refresh-contents)
@@ -293,6 +293,6 @@
 (global-set-key (kbd "C-x g") 'magit-status)
 (global-set-key (kbd "RET") 'newline-and-indent)
 
-;; Open the eshell at startup
+;; Open a terminal at startup
 
-(eshell)
+(ansi-term)
