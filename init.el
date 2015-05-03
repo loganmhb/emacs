@@ -39,7 +39,7 @@
                       clojure-mode floobits web-mode js2-mode
                       markdown-mode projectile exec-path-from-shell
                       auto-complete evil flycheck-clojure flycheck-pos-tip
-                      hideshow haskell-mode plantuml ob-clojure))
+                      hideshow haskell-mode plantuml))
 
 
 (package-refresh-contents)
@@ -64,9 +64,17 @@
     (set-window-buffer currentbuf newbuf)
     (eshell newbuf)))
 
+(defun create-ansi-term-in-new-buffer ()
+  (interactive)
+  (let ((currentbuf (get-buffer-window (current-buffer)))
+        (newbuf (generate-new-buffer-name "*shell*")))
+    (generate-new-buffer newbuf)
+    (set-window-dedicated-p currentbuf nil)
+    (set-window-buffer currentbuf newbuf)
+    (ansi-term "/bin/bash" newbuf)))
 
 (global-set-key (kbd "C-c e") 'create-eshell-in-new-buffer)
-
+(global-set-key (kbd "C-c t") 'create-ansi-term-in-new-buffer)
 
 ;; fix path?
 
@@ -114,11 +122,13 @@
   (insert "\n")
   (call-interactively 'cider-eval-last-sexp)
   (move-to-left-margin)
-  (insert ";=> "))
+  (insert ";=> \n"))
 
 (add-hook 'clojure-mode-hook (lambda ()
                                (global-set-key (kbd "C-c i")
                                                'eval-and-insert-sexpr)))
+
+(add-hook 'cider-repl-mode-hook (lambda () (paredit-mode)))
 
 (mapc (lambda (s) (put-clojure-indent s 1))
       '(describe describe-server it before-all after-all before after
