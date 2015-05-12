@@ -64,17 +64,17 @@
     (set-window-buffer currentbuf newbuf)
     (eshell newbuf)))
 
-(defun create-ansi-term-in-new-buffer ()
+(defun create-shell-in-new-buffer ()
   (interactive)
   (let ((currentbuf (get-buffer-window (current-buffer)))
         (newbuf (generate-new-buffer-name "*shell*")))
     (generate-new-buffer newbuf)
     (set-window-dedicated-p currentbuf nil)
     (set-window-buffer currentbuf newbuf)
-    (ansi-term "/bin/bash" newbuf)))
+    (shell newbuf)))
 
 (global-set-key (kbd "C-c e") 'create-eshell-in-new-buffer)
-(global-set-key (kbd "C-c t") 'create-ansi-term-in-new-buffer)
+(global-set-key (kbd "C-c t") 'create-shell-in-new-buffer)
 
 ;; fix path?
 
@@ -295,4 +295,4 @@
 
 ;; Open a terminal at startup
 
-(ansi-term)
+(shell)
