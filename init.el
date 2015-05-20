@@ -76,11 +76,6 @@
 (global-set-key (kbd "C-c e") 'create-eshell-in-new-buffer)
 (global-set-key (kbd "C-c t") 'create-shell-in-new-buffer)
 
-;; fix path?
-
-(when (memq window-system '(mac ns))
-  (exec-path-from-shell-initialize))
-
 ;; load midje mode manually
 
 (add-to-list 'load-path "~/.emacs.d/vendor/midje-mode")
@@ -130,6 +125,8 @@
 
 (add-hook 'cider-repl-mode-hook (lambda () (paredit-mode)))
 
+;; fix custom indentation
+
 (mapc (lambda (s) (put-clojure-indent s 1))
       '(describe describe-server it before-all after-all before after
                  init-state render render-state will-mount did-mount should-update
@@ -138,7 +135,6 @@
 
 (mapc (lambda (s) (put-clojure-indent s 'defun))
       '(GET* PUT* DELETE* POST* PATCH* context))
-
 
 
 ;; Highlight long lines
@@ -251,6 +247,7 @@
 (add-to-list 'auto-mode-alist '("\\.jsx\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
 (add-to-list 'auto-mode-alist '("\\.html\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.boot\\'" . clojure-mode))
 
 ;; Open this file with M-x open-dot-emacs
 
