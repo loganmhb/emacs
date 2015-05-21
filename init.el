@@ -16,9 +16,10 @@
 (setq inhibit-splash-screen t)
 (setq initial-frame-alist '((top . 0) (left . 0) (width . 172) (height . 60)))
 
-;; window changing keybinding:
+;; misc keybinding:
 
 (global-set-key (kbd "C-o") 'other-window)
+(global-set-key (kbd "C-c j") 'join-line)
 
 ;; minimal UI
 
@@ -41,16 +42,42 @@
                       auto-complete evil flycheck-clojure flycheck-pos-tip
                       hideshow haskell-mode))
 
+(defun update-my-packages ()
+  (package-refresh-contents)
+  (dolist (p my-packages)
+    (when (not (package-installed-p p))
+      (condition-case err
+          (package-install p)
+        (error (message "%s" (error-message-string err)))))))
 
-(package-refresh-contents)
+;; track the date of last package update so we don't have to update on every restart:
 
+(defun insert-current-date ()
+  (interactive)
+  (insert (shell-command-to-string "echo -n $(date +%Y-%m-%d)")))
 
-(dolist (p my-packages)
-  (when (not (package-installed-p p))
-    (condition-case err
-        (package-install p)
-      (error (message "%s" (error-message-string err))))))
+(defun write-date-to-disk ()
+  (with-temp-buffer
+    (insert-current-date)
+    (write-file "update.time")))
 
+(defun get-string-from-file (file-path)
+  "Return file-path's file content."
+  (with-temp-buffer
+    (insert-file-contents file-path)
+    (buffer-string)))
+
+(defun update-packages-if-outdated ()
+  (let ((current-date (substring (with-temp-buffer (insert-current-date)
+                                                   (buffer-string))
+                                 0 10))
+        (last-updated (substring (get-string-from-file "update.time")
+                                 0 10)))
+    (if (not (string= current-date last-updated))
+        (progn (update-my-packages)
+               (write-date-to-disk)))))
+
+(update-packages-if-outdated)
 
 ;; keybinding for eshell
 
