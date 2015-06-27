@@ -231,9 +231,9 @@
       c-basic-offset 4)
 ;; js2-mode customizations (can't use customize because the above popup blocking code is not working)
 
-(custom-set-variables  
- '(js2-basic-offset 2)  
- '(js2-bounce-indent-p t)) 
+(custom-set-variables
+ '(js2-basic-offset 2)
+ '(js2-bounce-indent-p t))
 
 (add-hook 'markdown-mode-hook (lambda ()
                                 (writeroom-mode)
