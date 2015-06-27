@@ -40,7 +40,7 @@
                       clojure-mode floobits web-mode js2-mode
                       markdown-mode projectile exec-path-from-shell
                       auto-complete evil flycheck-clojure flycheck-pos-tip
-                      hideshow haskell-mode))
+                      hideshow haskell-mode rainbow-delimiters))
 
 (defun update-my-packages ()
   (package-refresh-contents)
@@ -59,7 +59,7 @@
 (defun write-date-to-disk ()
   (with-temp-buffer
     (insert-current-date)
-    (write-file "update.time")))
+    (write-file "~/.emacs.d/.update.time")))
 
 (defun get-string-from-file (file-path)
   "Return file-path's file content."
@@ -71,7 +71,7 @@
   (let ((current-date (substring (with-temp-buffer (insert-current-date)
                                                    (buffer-string))
                                  0 10))
-        (last-updated (substring (get-string-from-file "update.time")
+        (last-updated (substring (get-string-from-file "~/.emacs.d/.update.time")
                                  0 10)))
     (if (not (string= current-date last-updated))
         (progn (update-my-packages)
@@ -120,6 +120,13 @@
 (setq projectile-keymap-prefix (kbd "C-c p"))
 
 (projectile-global-mode)
+
+;; rainbow delimiters
+
+(add-to-list 'load-path "~/.emacs.d/vendor")
+(require 'rainbow-delimiters)
+
+(add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
 
 ;; autocomplete
 
@@ -201,21 +208,6 @@
 (load-theme 'zenburn t)
 
 
-;; Keep popup dialogues from crashing Emacs, maybe
-
-
-(defadvice yes-or-no-p (around prevent-dialog activate)
-  "Prevent yes-or-no-p from activating a dialog"
-  (let ((use-dialog-box nil))
-    ad-do-it))
-
-
-(defadvice y-or-n-p (around prevent-dialog-yorn activate)
-  "Prevent y-or-n-p from activating a dialog"
-  (let ((use-dialog-box nil))
-    ad-do-it))
-
-
 ;; clojure-mode customizations
 
 
@@ -282,6 +274,19 @@
   (interactive)
   (find-file "~/.emacs.d/init.el"))
 
+
+(defun pretty-lambdas-haskell ()
+  (font-lock-add-keywords
+   nil `((,(concat "\\(" (regexp-quote "\\") "\\)")
+          (0 (progn (compose-region (match-beginning 1) (match-end 1)
+                                    ,(make-char 'greek-iso8859-7 107))
+                    nil))))))
+
+(add-hook 'haskell-mode-hook 'pretty-lambdas-haskell)
+
+;; Show trailing whitespace
+
+(setq-default show-trailing-whitespace t)
 
 ;; Org mode extensions
 
