@@ -321,7 +321,3 @@
 
 (global-set-key (kbd "C-x g") 'magit-status)
 (global-set-key (kbd "RET") 'newline-and-indent)
-
-;; Open a terminal at startup
-
-(shell)
